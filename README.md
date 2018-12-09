@@ -47,9 +47,28 @@ end
 
 ## Properties
 
+### email_id
+
+The content ID for the transactional email, which can be found in Email Tool UI.
+
+### send_id
+
+The ID of a particular send. No more than one email with a given sendId will be send per portal, so including a sendId is a good way to prevent duplicate email sends.
+
+### contact_properties
+
+A JSON array of contact property values. Each property will get set on the contact record and will be visible in the template under {{ contact.NAME }}.
+
+### custom_properties
+
+A JSON array of property values. Each property will be visible in the template under {{ custom.NAME }}.
+
+## Testing
+
+Add this line to `config/environments/test.rb`:
+
+```ruby
+Hubspot::Mailer.delivery_method = :test
 ```
-email_id – The content ID for the transactional email, which can be found in Email Tool UI.
-send_id – The ID of a particular send. No more than one email with a given sendId will be send per portal, so including a sendId is a good way to prevent duplicate email sends.
-contact_properties – A JSON array of contact property values. Each property will get set on the contact record and will be visible in the template under {{ contact.NAME }}.
-custom_properties – A JSON array of property values. Each property will be visible in the template under {{ custom.NAME }}.
-```
+
+Now you can use the same `ActionMailer::Base.deliveries` to read sent emails in your tests.
