@@ -57,11 +57,11 @@ The ID of a particular send. No more than one email with a given sendId will be 
 
 ### contact_properties
 
-A JSON array of contact property values. Each property will get set on the contact record and will be visible in the template under {{ contact.NAME }}.
+Each property will get set on the contact record and will be visible in the template under {{ contact.NAME }}.
 
 ### custom_properties
 
-A JSON array of property values. Each property will be visible in the template under {{ custom.NAME }}.
+Each property will be visible in the template under {{ custom.NAME }}.
 
 ## Testing
 
