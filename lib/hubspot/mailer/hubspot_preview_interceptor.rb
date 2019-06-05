@@ -15,18 +15,19 @@ module Hubspot
 
       def transform!
         build_preview
-        message
       end
 
       private
 
       def build_preview
-        html_part = "<b>Email ID (template)</b>: #{message.email_id}<br/><br/>"
+        if message.message.is_a?(Hubspot::Mailer::Message)
+          html_part = "<b>Email ID (template)</b>: #{message.email_id}<br/><br/>"
 
-        html_part << list_properties("Contact Properties (use via {{contact.propertyname}})", message.contact_properties)
-        html_part << list_properties("Custom Properties (use via {{custom.property_name}})", message.custom_properties)
+          html_part << list_properties("Contact Properties (use via {{contact.propertyname}})", message.contact_properties)
+          html_part << list_properties("Custom Properties (use via {{custom.property_name}})", message.custom_properties)
 
-        message.html_part = html_part
+          message.html_part = html_part
+        end
 
         message
       end
