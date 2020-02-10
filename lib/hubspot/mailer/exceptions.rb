@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hubspot
   class Mailer < ActionMailer::Base
     class MissingTemplateError < StandardError; end
