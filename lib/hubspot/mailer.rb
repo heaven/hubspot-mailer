@@ -61,7 +61,7 @@ module Hubspot
 
       def single_send_params(mail)
         raise MissingTemplateError, "Missing emailId parameter." unless mail.email_id.present?
-        raise MissingRecipientError, "Missing recipient emaul."  unless mail.to.present?
+        raise MissingRecipientError, "Missing recipient email."  unless mail.to.present?
 
         data = {
           emailId: mail.email_id,
