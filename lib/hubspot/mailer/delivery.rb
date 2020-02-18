@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Hubspot
   class Mailer < ActionMailer::Base
     class Delivery
       attr_accessor :settings
 
-      DEFAULTS = {}
+      DEFAULTS = {}.freeze
 
       def initialize(values)
         self.settings = DEFAULTS.merge(values)

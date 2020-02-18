@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hubspot
   class Mailer < ActionMailer::Base
     class HubspotPreviewInterceptor
@@ -21,7 +23,8 @@ module Hubspot
 
       def build_preview
         if message.message.is_a?(Hubspot::Mailer::Message)
-          html_part = "<b>Email ID (template)</b>: #{message.email_id}<br/><br/>"
+          html_part = String.new
+          html_part << "<b>Email ID (template)</b>: #{message.email_id}<br/><br/>"
 
           html_part << list_properties("Contact Properties (use via {{contact.propertyname}})", message.contact_properties)
           html_part << list_properties("Custom Properties (use via {{custom.property_name}})", message.custom_properties)
@@ -33,7 +36,7 @@ module Hubspot
       end
 
       def list_properties(label, list)
-        buffer = ""
+        buffer = String.new
         return buffer unless list.present?
 
         buffer << "<b>#{label}</b>:<ul>"

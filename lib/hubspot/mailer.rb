@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Hubspot
   class Mailer < ActionMailer::Base
     abstract!
@@ -15,7 +17,7 @@ module Hubspot
 
     self.default_params = {}.freeze
 
-    SINGLE_SEND_PATH = '/email/public/v1/singleEmail/send'.freeze
+    SINGLE_SEND_PATH = "/email/public/v1/singleEmail/send"
 
     class << self
       # Wraps an email delivery inside of <tt>ActiveSupport::Notifications</tt> instrumentation.
@@ -82,19 +84,19 @@ module Hubspot
         end
 
         # Copy subject from header to custom property
-        if mail.subject.present? and not mail.custom_properties.try(:[], :subject)
+        if mail.subject.present? && !mail.custom_properties.try(:[], :subject)
           mail.custom_properties ||= {}
           mail.custom_properties[:subject] = mail.subject
         end
 
         if mail.contact_properties.present?
           data[:contactProperties] =
-            Hubspot::Utils.hash_to_properties(mail.contact_properties, :key_name => :name)
+            Hubspot::Utils.hash_to_properties(mail.contact_properties, key_name: :name)
         end
 
         if mail.custom_properties.present?
           data[:customProperties] =
-            Hubspot::Utils.hash_to_properties(mail.custom_properties, :key_name => :name)
+            Hubspot::Utils.hash_to_properties(mail.custom_properties, key_name: :name)
         end
 
         data
@@ -104,20 +106,21 @@ module Hubspot
         status_code = response["sendResult"]
 
         case status_code
-          when "SENT", "QUEUED"
-            response["eventId"]
-          when "INVALID_TO_ADDRESS"
-            raise RecipientAddressError.new(response), "The TO address is invalid: #{status_code}"
-          when "INVALID_FROM_ADDRESS"
-            raise SenderAddressError.new(response), "The FROM address is invalid: #{status_code}"
-          when "BLOCKED_DOMAIN", "PORTAL_SUSPENDED"
-            raise SendingError.new(response), "Message can't be sent: #{status_code}"
-          when "PREVIOUSLY_BOUNCED", "PREVIOUS_SPAM"
-            raise DeliveryError.new(response), "Message can't be delivered: #{status_code}"
-          when "MISSING_CONTENT"
-            raise InvalidTemplateError.new(response), "The emailId is invalid, or the emailId is an email that is not set up for Single Send: #{status_code}"
-          else
-            raise UnknownResponseError.new(response), "Unrecognized status code: #{status_code}"
+        when "SENT", "QUEUED"
+          response["eventId"]
+        when "INVALID_TO_ADDRESS"
+          raise RecipientAddressError.new(response), "The TO address is invalid: #{status_code}"
+        when "INVALID_FROM_ADDRESS"
+          raise SenderAddressError.new(response), "The FROM address is invalid: #{status_code}"
+        when "BLOCKED_DOMAIN", "PORTAL_SUSPENDED"
+          raise SendingError.new(response), "Message can't be sent: #{status_code}"
+        when "PREVIOUSLY_BOUNCED", "PREVIOUS_SPAM"
+          raise DeliveryError.new(response), "Message can't be delivered: #{status_code}"
+        when "MISSING_CONTENT"
+          raise InvalidTemplateError.new(response),
+                "The emailId is invalid, or the emailId is an email that is not set up for Single Send: #{status_code}"
+        else
+          raise UnknownResponseError.new(response), "Unrecognized status code: #{status_code}"
         end
       end
     end
@@ -173,7 +176,8 @@ module Hubspot
 
     def assign_headers_to_message(message, headers)
       headers.except(:parts_order, :content_type, :body, :template_name,
-        :template_path, :delivery_method, :delivery_method_options).each { |k, v| message[k] = v }
+                     :template_path, :delivery_method, :delivery_method_options)
+             .each { |k, v| message[k] = v }
     end
   end
 end
