@@ -23,11 +23,11 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0')
       s.add_runtime_dependency(%q<hubspot-ruby>.freeze, ["~> 0.4"])
-      s.add_runtime_dependency(%q<actionmailer>.freeze, ["~> 5.1"])
+      s.add_runtime_dependency(%q<actionmailer>.freeze, ["< 6.1"])
       s.add_development_dependency(%q<bundler>.freeze, ["~> 1.0"])
     else
       s.add_dependency(%q<hubspot-ruby>.freeze, ["~> 0.4"])
-      s.add_dependency(%q<actionmailer>.freeze, ["~> 5.1"])
+      s.add_dependency(%q<actionmailer>.freeze, ["< 6.1"])
       s.add_dependency(%q<bundler>.freeze, ["~> 1.0"])
     end
   else
