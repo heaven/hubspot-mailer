@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name        = "hubspot-mailer".freeze
-  s.version     = "0.0.2"
+  s.version     = "0.0.3"
   s.licenses    = ['MIT']
-  s.date        = "2018-12-09".freeze
+  s.date        = "2021-06-06".freeze
   s.description = "Create beautiful transactional emails right within HubSpot using the email editor with all the benefits of smart content, personalization and templates - just like regular HubSpot emails. Create beautiful transactional emails right within HubSpot using the email editor with all the benefits of smart content, personalization and templates - just like regular HubSpot emails. Create beautiful transactional emails right within HubSpot using the email editor with all the benefits of smart content, personalization and templates - just like regular HubSpot emails.".freeze
   s.summary     = "HubSpot Single Send API SDK for use with Ruby on Rails".freeze
   s.authors     = ["heaven".freeze]
