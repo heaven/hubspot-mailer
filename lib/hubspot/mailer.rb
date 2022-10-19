@@ -10,14 +10,16 @@ module Hubspot
     # Set hubspot as a default delivery method
     self.delivery_method = :hubspot
 
-    # Set credentials
-    # self.hubspot_settings = { :hapikey => ENV.fetch("HUBSPOT_API_KEY") }
-
     self.default_params = {}.freeze
 
     SINGLE_SEND_PATH = '/email/public/v1/singleEmail/send'.freeze
+    BASE_URL = 'https://api.hubapi.com'.freeze
+    READ_TIMEOUT = 20
+    OPEN_TIMEOUT = 20
 
     class << self
+      attr_writer :token
+
       # Wraps an email delivery inside of <tt>ActiveSupport::Notifications</tt> instrumentation.
       #
       # This method is actually called by the <tt>Mail::Message</tt> object itself
@@ -39,10 +41,24 @@ module Hubspot
         data = single_send_params(mail)
 
         # Call the API
-        response = Hubspot::Connection.post_json(SINGLE_SEND_PATH, params: {}, body: data)
+        url = BASE_URL + SINGLE_SEND_PATH
+        response = HTTParty.post(url, 
+          { 
+            body: data.to_json, 
+            headers: {
+              'Content-Type' => 'application/json',
+              'Authorization' => "Bearer #{@token}"
+              }, 
+            format: :json, 
+            read_timeout: READ_TIMEOUT,
+            open_timeout: OPEN_TIMEOUT
+          }
+        )
+
+        raise SendingError.new(response) unless response.success?
 
         # Parse response and either raise or return event details
-        parse_response(response)
+        parse_response(response.parsed_response)
       end
 
       private
@@ -93,15 +109,20 @@ module Hubspot
 
         if mail.contact_properties.present?
           data[:contactProperties] =
-            Hubspot::Utils.hash_to_properties(mail.contact_properties, :key_name => :name)
+            hash_to_properties(mail.contact_properties, :key_name => :name)
         end
 
         if mail.custom_properties.present?
           data[:customProperties] =
-            Hubspot::Utils.hash_to_properties(mail.custom_properties, :key_name => :name)
+            hash_to_properties(mail.custom_properties, :key_name => :name)
         end
 
         data
+      end
+
+      def hash_to_properties(hash, opts = {})
+        key_name = opts[:key_name] || "property"
+        hash.map { |k, v| { key_name => k.to_s, "value" => v } }
       end
 
       def parse_response(response)
